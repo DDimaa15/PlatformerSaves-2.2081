@@ -1,10 +1,11 @@
 #if defined(GEODE_IS_WINDOWS)
 #include <Geode/Geode.hpp>
-#include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <sabe.persistenceapi/include/PersistenceAPI.hpp>
 
 using namespace geode::prelude;
 using namespace persistenceAPI;
+
+#include <geode.custom-keybinds/include/Keybinds.hpp>
 
 void setupKeybinds();
 
