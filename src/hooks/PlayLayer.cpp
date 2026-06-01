@@ -270,6 +270,7 @@ bool PSPlayLayer::validSaveExists() {
 }
 
 #if defined(GEODE_IS_WINDOWS)
+void PSPlayLayer::setupKeybinds() {
     addEventListener<keybinds::InvokeBindFilter>(
         [this](keybinds::InvokeBindEvent* event) {
             if (event->isDown() && canSave() && startSaveGame()) {
