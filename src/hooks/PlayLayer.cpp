@@ -4,6 +4,9 @@
 #include "domain/CheckpointGameObjectReference.hpp"
 #include "hooks/PauseLayer.hpp"
 #include "hooks/FMODAudioEngine.hpp"
+#if !defined(GEODE_IS_IOS)
+#include <geode.custom-keybinds/include/Keybinds.hpp>
+#endif
 #include <util/algorithm.hpp>
 #include <util/filesystem.hpp>
 #include <util/platform.hpp>
@@ -12,19 +15,18 @@ using namespace geode::prelude;
 using namespace persistenceAPI;
 using namespace util::platform;
 
-
 #if defined(GEODE_IS_WINDOWS)
-    #define UNIQUE_ID_OFFSET 0x6ba158
+    #define UNIQUE_ID_OFFSET 0x69c158
 #elif defined(GEODE_IS_ANDROID64)
-    #define UNIQUE_ID_OFFSET 0x122f018
+    #define UNIQUE_ID_OFFSET 0x11fe018
 #elif defined(GEODE_IS_ANDROID32)
-    #define UNIQUE_ID_OFFSET 0xab900c
+    #define UNIQUE_ID_OFFSET 0xa9f00c
 #elif defined(GEODE_IS_ARM_MAC)
-    #define UNIQUE_ID_OFFSET 0x8b58ac
+    #define UNIQUE_ID_OFFSET 0x8aa39c
 #elif defined(GEODE_IS_INTEL_MAC)
-    #define UNIQUE_ID_OFFSET 0x99e600
+    #define UNIQUE_ID_OFFSET 0x985500
 #elif defined(GEODE_IS_IOS)
-    #define UNIQUE_ID_OFFSET 0x84c1e8
+    #define UNIQUE_ID_OFFSET 0x83f2e8
 #endif
 
 // Max PSF version is 31 cause after that bitfield is broken
@@ -62,7 +64,8 @@ bool PSPlayLayer::init(GJGameLevel* i_level, bool i_useReplay, bool i_dontCreate
     if (m_fields->m_signalForAsyncLoad) {
         m_loadingProgress = 0.0f;
     }
-    #if defined(GEODE_IS_WINDOWS)
+    #if !defined(GEODE_IS_IOS)
+    setupKeybinds();
     #endif
     setupSavingProgressCircleSprite();
     setupSavingSuccessSprite();
@@ -166,22 +169,19 @@ void PSPlayLayer::postUpdate(float i_unkFloat) {
 
 CheckpointObject* PSPlayLayer::markCheckpoint() {
     PSCheckpointObject* l_checkpointObject = static_cast<PSCheckpointObject*>(PlayLayer::markCheckpoint());
-    
-    log::warn("[markCheckpoint] inPostUpdate: {}, isPracticeMode: {}, activatedCheckpoint: {}",
-    m_fields->m_inPostUpdate, m_isPracticeMode, m_activatedCheckpoint != nullptr);
-    
-    if (l_checkpointObject && savesEnabled() && m_fields->m_inPostUpdate && !m_isPracticeMode) {
+
+    if (l_checkpointObject && savesEnabled() && !m_isPracticeMode) {
         if (m_fields->m_triedPlacingCheckpoint) {
             m_fields->m_triedPlacingCheckpoint = false;
         } else if (m_activatedCheckpoint != nullptr) {
-            log::info("[markCheckpoint] triggered checkpoint");
+            //log::info("[markCheckpoint] triggered checkpoint");
             l_checkpointObject->m_fields->m_timePlayed = m_timePlayed;
             l_checkpointObject->m_fields->m_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
             m_fields->m_normalModeCheckpoints->addObject(l_checkpointObject);
             m_fields->m_activatedCheckpoints.push_back(CheckpointGameObjectReference(m_activatedCheckpoint));
             // autosave
             if (Mod::get()->getSettingValue<bool>("auto-save")) {
-                log::info("[markCheckpoint] autosave triggered");
+                //log::info("[markCheckpoint] autosave triggered");
                 startSaveGame();
             }
         }
@@ -270,7 +270,24 @@ bool PSPlayLayer::validSaveExists() {
     return util::filesystem::validSaveExists(m_level);
 }
 
-
+#if !defined(GEODE_IS_IOS)
+void PSPlayLayer::setupKeybinds() {
+    addEventListener<keybinds::InvokeBindFilter>(
+        [this](keybinds::InvokeBindEvent* event) {
+            if (event->isDown() && canSave() && startSaveGame()) {
+                PSPauseLayer* l_pauseLayer = static_cast<PSPauseLayer*>(CCScene::get()->getChildByID("PauseLayer"));
+                if (l_pauseLayer) {
+                    if (l_pauseLayer->m_fields->m_saveCheckpointsSprite != nullptr) l_pauseLayer->m_fields->m_saveCheckpointsSprite->setColor({127,127,127});
+                    if (l_pauseLayer->m_fields->m_saveCheckpointsSprite != nullptr && l_pauseLayer->m_fields->m_saveCheckpointsSprite->getChildren()->count() > 0) static_cast<CCSprite*>(l_pauseLayer->m_fields->m_saveCheckpointsSprite->getChildren()->objectAtIndex(0))->setColor({127,127,127});
+                    if (l_pauseLayer->m_fields->m_saveCheckpointsButton != nullptr) l_pauseLayer->m_fields->m_saveCheckpointsButton->m_bEnabled = false;
+                }
+            }
+            return ListenerResult::Propagate;
+        },
+        "save-game"_spr
+    );
+}
+#endif
 
 void PSPlayLayer::setupSavingProgressCircleSprite() {
     CCSize l_winSize = CCDirector::sharedDirector()->getWinSize();
