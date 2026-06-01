@@ -70,7 +70,6 @@ bool PSPlayLayer::init(GJGameLevel* i_level, bool i_useReplay, bool i_dontCreate
 void PSPlayLayer::processCreateObjectsFromSetup() {
     if (!m_fields->m_startedLoadingObjects) {
         m_fields->m_startedLoadingObjects = true;
-        *reinterpret_cast<int*>(geode::base::get()+UNIQUE_ID_OFFSET) = 12;
         reinterpret_cast<persistenceAPI::PAPlayLayer*>(this)->m_fields->m_uniqueIDBase = *reinterpret_cast<int*>(geode::base::get()+UNIQUE_ID_OFFSET);
     }
     PlayLayer::processCreateObjectsFromSetup();
