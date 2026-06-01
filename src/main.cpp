@@ -1,4 +1,4 @@
-#if !defined(GEODE_IS_IOS)
+#if defined(GEODE_IS_WINDOWS)
 #include <Geode/Geode.hpp>
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <sabe.persistenceapi/include/PersistenceAPI.hpp>
