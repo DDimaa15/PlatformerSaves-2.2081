@@ -69,11 +69,10 @@
 			"type": "bool"
 		}
 	},
-	"incompatibilities": [
-		{
-			"id": "thesillydoggo.moretags",
+	"incompatibilities": {
+		"thesillydoggo.moretags": {
 			"importance": "breaking",
 			"version": "*"
 		}
-	]
+	}
 }
