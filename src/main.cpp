@@ -19,7 +19,7 @@ void setupKeybinds() {
         "save-game"_spr,
         "Save game",
         "Hotkey for quick saving",
-        { Keybind::create(KEY_K, Modifier::None) },
+        { keybinds::Keybind::create(KEY_K, Modifier::None) },
         Category::PLAY,
     });
 }
