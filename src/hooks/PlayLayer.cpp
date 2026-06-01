@@ -12,9 +12,6 @@ using namespace geode::prelude;
 using namespace persistenceAPI;
 using namespace util::platform;
 
-#if defined(GEODE_IS_WINDOWS)
-#include <geode.custom-keybinds/include/Keybinds.hpp>
-#endif
 
 #if defined(GEODE_IS_WINDOWS)
     #define UNIQUE_ID_OFFSET 0x6ba158
@@ -66,7 +63,6 @@ bool PSPlayLayer::init(GJGameLevel* i_level, bool i_useReplay, bool i_dontCreate
         m_loadingProgress = 0.0f;
     }
     #if defined(GEODE_IS_WINDOWS)
-    setupKeybinds();
     #endif
     setupSavingProgressCircleSprite();
     setupSavingSuccessSprite();
@@ -271,24 +267,7 @@ bool PSPlayLayer::validSaveExists() {
     return util::filesystem::validSaveExists(m_level);
 }
 
-#if defined(GEODE_IS_WINDOWS)
-void PSPlayLayer::setupKeybinds() {
-    addEventListener<keybinds::InvokeBindFilter>(
-        [this](keybinds::InvokeBindEvent* event) {
-            if (event->isDown() && canSave() && startSaveGame()) {
-                PSPauseLayer* l_pauseLayer = static_cast<PSPauseLayer*>(CCScene::get()->getChildByID("PauseLayer"));
-                if (l_pauseLayer) {
-                    if (l_pauseLayer->m_fields->m_saveCheckpointsSprite != nullptr) l_pauseLayer->m_fields->m_saveCheckpointsSprite->setColor({127,127,127});
-                    if (l_pauseLayer->m_fields->m_saveCheckpointsSprite != nullptr && l_pauseLayer->m_fields->m_saveCheckpointsSprite->getChildren()->count() > 0) static_cast<CCSprite*>(l_pauseLayer->m_fields->m_saveCheckpointsSprite->getChildren()->objectAtIndex(0))->setColor({127,127,127});
-                    if (l_pauseLayer->m_fields->m_saveCheckpointsButton != nullptr) l_pauseLayer->m_fields->m_saveCheckpointsButton->m_bEnabled = false;
-                }
-            }
-            return ListenerResult::Propagate;
-        },
-        "save-game"_spr
-    );
-}
-#endif
+
 
 void PSPlayLayer::setupSavingProgressCircleSprite() {
     CCSize l_winSize = CCDirector::sharedDirector()->getWinSize();

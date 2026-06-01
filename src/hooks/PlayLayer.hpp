@@ -184,11 +184,6 @@ public:
         return i_object->m_uniqueID-l_uniqueIDBase;
     }
 
-    // TODO: Support on Ios
-    #if defined(GEODE_IS_WINDOWS)
-    void setupKeybinds();
-    #endif
-
     void setupSavingProgressCircleSprite();
 
     void showSavingProgressCircleSprite(bool i_show);
