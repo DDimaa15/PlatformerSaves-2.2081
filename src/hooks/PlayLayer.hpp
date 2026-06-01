@@ -185,7 +185,7 @@ public:
     }
 
     // TODO: Support on Ios
-    #if !defined(GEODE_IS_IOS)
+    #if defined(GEODE_IS_WINDOWS)
     void setupKeybinds();
     #endif
 

@@ -4,8 +4,7 @@
 #include "domain/CheckpointGameObjectReference.hpp"
 #include "hooks/PauseLayer.hpp"
 #include "hooks/FMODAudioEngine.hpp"
-#if !defined(GEODE_IS_IOS)
-#include <geode.custom-keybinds/include/Keybinds.hpp>
+#if defined(GEODE_IS_WINDOWS)
 #endif
 #include <util/algorithm.hpp>
 #include <util/filesystem.hpp>
@@ -64,7 +63,7 @@ bool PSPlayLayer::init(GJGameLevel* i_level, bool i_useReplay, bool i_dontCreate
     if (m_fields->m_signalForAsyncLoad) {
         m_loadingProgress = 0.0f;
     }
-    #if !defined(GEODE_IS_IOS)
+    #if defined(GEODE_IS_WINDOWS)
     setupKeybinds();
     #endif
     setupSavingProgressCircleSprite();
@@ -270,8 +269,7 @@ bool PSPlayLayer::validSaveExists() {
     return util::filesystem::validSaveExists(m_level);
 }
 
-#if !defined(GEODE_IS_IOS)
-void PSPlayLayer::setupKeybinds() {
+#if defined(GEODE_IS_WINDOWS)
     addEventListener<keybinds::InvokeBindFilter>(
         [this](keybinds::InvokeBindEvent* event) {
             if (event->isDown() && canSave() && startSaveGame()) {
