@@ -4,8 +4,6 @@
 #include "domain/CheckpointGameObjectReference.hpp"
 #include "hooks/PauseLayer.hpp"
 #include "hooks/FMODAudioEngine.hpp"
-#if defined(GEODE_IS_WINDOWS)
-#endif
 #include <util/algorithm.hpp>
 #include <util/filesystem.hpp>
 #include <util/platform.hpp>
@@ -13,6 +11,10 @@
 using namespace geode::prelude;
 using namespace persistenceAPI;
 using namespace util::platform;
+
+#if defined(GEODE_IS_WINDOWS)
+#include <geode.custom-keybinds/include/Keybinds.hpp>
+#endif
 
 #if defined(GEODE_IS_WINDOWS)
     #define UNIQUE_ID_OFFSET 0x6ba158
