@@ -44,7 +44,7 @@ jobs:
         run: |
           {
             echo "workflows<<EOF"
-            curl -L --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -H 'Accept: application/vnd.github+json; charset=utf-8' 'https://api.github.com/repos/0x5abe/PersistenceAPI/actions/runs?per_page=1&status=success'
+            curl -L --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -H 'Accept: application/vnd.github+json; charset=utf-8' 'https://api.github.com/repos/DDimaa15/PersistenceAPI/actions/runs?per_page=1&status=success'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
   
@@ -52,7 +52,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: 0x5abe/PersistenceAPI
+          repository: DDimaa15/PersistenceAPI
           run-id: ${{ fromJSON(steps.list-workflows.outputs.workflows).workflow_runs[0].id }}
 
       - name: Extract in geode-deps
