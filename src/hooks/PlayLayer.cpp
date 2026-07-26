@@ -15,7 +15,7 @@ using namespace util::platform;
 #if defined(GEODE_IS_WINDOWS)
     #define UNIQUE_ID_OFFSET 0x69c158
 #elif defined(GEODE_IS_ANDROID64)
-    #define UNIQUE_ID_OFFSET 0x11fe018
+    #define UNIQUE_ID_OFFSET 0x122f018
 #elif defined(GEODE_IS_ANDROID32)
     #define UNIQUE_ID_OFFSET 0xa9f00c
 #elif defined(GEODE_IS_ARM_MAC)
@@ -70,6 +70,7 @@ bool PSPlayLayer::init(GJGameLevel* i_level, bool i_useReplay, bool i_dontCreate
 void PSPlayLayer::processCreateObjectsFromSetup() {
     if (!m_fields->m_startedLoadingObjects) {
         m_fields->m_startedLoadingObjects = true;
+        *reinterpret_cast<int*>(geode::base::get()+UNIQUE_ID_OFFSET) = 12;
         reinterpret_cast<persistenceAPI::PAPlayLayer*>(this)->m_fields->m_uniqueIDBase = *reinterpret_cast<int*>(geode::base::get()+UNIQUE_ID_OFFSET);
     }
     PlayLayer::processCreateObjectsFromSetup();
