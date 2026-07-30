@@ -13,7 +13,7 @@ using namespace persistenceAPI;
 using namespace util::platform;
 
 #if defined(GEODE_IS_WINDOWS)
-    #define UNIQUE_ID_OFFSET 0x69c158
+    #define UNIQUE_ID_OFFSET 0x6ba158
 #elif defined(GEODE_IS_ANDROID64)
     #define UNIQUE_ID_OFFSET 0x122f018
 #elif defined(GEODE_IS_ANDROID32)
